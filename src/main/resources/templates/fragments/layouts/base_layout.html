@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}" />
+    <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/style.css}" /> <!-- Tu CSS personalizado -->
+    <title>Document</title>
+</head>
+
+<body>
+    <section layout:fragment="content">
+        <p>This is filled by the content template.</p>
+    </section>
+
+
+
+
+    <!-- Bootstrap JS y dependencias -->
+    <script th:src="@{/webjars/jquery/3.7.1/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/2.11.7/umd/popper.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/script.js}"></script> <!-- Tu JS personalizado -->
+</body>
+
+</html>
