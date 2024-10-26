@@ -23,26 +23,11 @@ public class GymControllerMvc {
     @GetMapping("/list")
     public CompletableFuture<String> hello(Model theModel, Pageable pageable) {
 
-        // theModel.addAttribute("pageFragment", "fragments/index-gym");
-
         return gymService.findAllAsync(pageable)
                 .thenApplyAsync(gymPage -> {
                     theModel.addAttribute("gyms", gymPage.getContent());
                     return "index-gym :: test_frag";
                 });
     }
-
-    // @RequestMapping(value = "/test_ajax_frag")
-    // @GetMapping("/test_ajax_frag")
-    // public CompletableFuture<String> sendHtmlFragment(Model map, Pageable
-    // pageable) {
-    // // map.addAttribute("foo", "bar");
-    // return gymService.findAllAsync(pageable)
-    // .thenApplyAsync(gymPage -> {
-    // map.addAttribute("gyms", gymPage.getContent());
-    // return "testajaxfragment :: test_frag";
-    // });
-    // // return "testajaxfragment :: test_frag";
-    // }
 
 }
