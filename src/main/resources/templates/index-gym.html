@@ -80,15 +80,8 @@
             </div>
         </div>
 
-
         <script>
             $(document).ready(function () {
-                // Manejador del botón para abrir el modal
-                // $('#openModalButton').on('click', function () {
-                //     $('#gymModal').modal('show');
-                // });
-
-                // Manejo de envío del formulario
                 $('#gymForm').submit(function (event) {
                     event.preventDefault(); // Evita el envío por defecto del formulario
 
@@ -100,14 +93,12 @@
                             // Cierra el modal
                             $('#gymModal').modal('hide');
 
-                            // Recarga el contenido de #output usando $.ajax para evitar problemas de caché
+                            // Recarga solo el fragmento test_frag dentro de #output
                             $.ajax({
                                 url: '/gyms/list',
                                 type: 'GET',
-                                cache: false, // Desactiva el caché para asegurarte de obtener la versión más reciente
                                 success: function (data) {
-                                    // Reemplaza el contenido completo de #output con la respuesta obtenida
-                                    $('#output').html($(data).find('#output').html());
+                                    $('#output').html(data);
                                 },
                                 error: function (xhr, status, error) {
                                     console.error("Error al cargar el fragmento:", error);
@@ -122,8 +113,6 @@
                     });
                 });
             });
-
-
         </script>
     </div>
 
