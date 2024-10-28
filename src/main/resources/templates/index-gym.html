@@ -1,41 +1,132 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head>Gyms</head>
+<!-- <head>
+    <link href="/webjars/bootstrap/5.3.3/css/bootstrap.css" rel="stylesheet" />
+    <script type="text/javascript" src="/webjars/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/5.3.3/js/bootstrap.min.js"></script>
+</head> -->
 
 <body>
     <div th:fragment="test_frag">
         <div id="output" class="container">
-            Some replacement content.
+            <div>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#gymModal">Agregar</button>
+            </div>
+            <br>
+
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>Codigo</th>
+                        <th class="hidden-column">Id</th>
+                        <th>Código</th>
                         <th>Nombre</th>
                         <th>Dirección</th>
-                        <th>Telefono</th>
+                        <th>Teléfono</th>
                         <th>Fecha Creación</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="tempGym : ${gyms}">
-                        <td th:text="${tempGym.id}" />
+                        <td class="hidden-column" th:text="${tempGym.id}" />
                         <td th:text="${tempGym.code}" />
                         <td th:text="${tempGym.name}" />
                         <td th:text="${tempGym.address}" />
                         <td th:text="${tempGym.phone}" />
                         <td th:text="${tempGym.creationDate}" />
                     </tr>
-                    <tr>
-                        <td scope="row"></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+
                 </tbody>
             </table>
+
+            <!-- Modal -->
+            <div class="modal fade" id="gymModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <form id="gymForm" th:action="@{/gyms/save}" th:object="${gym}" method="post">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Gym</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+
+                                <!-- <div class="mb-3">
+                                            <label for="code" class="form-label">Codigo</label>
+                                            <input type="text" class="form-control" id="code">
+                                        </div> -->
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Nombre</label>
+                                    <input type="text" th:field="*{name}" class="form-control" id="name">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Dirección</label>
+                                    <input type="text" th:field="*{address}" class="form-control" id="address">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Teléfono</label>
+                                    <input type="text" th:field="*{phone}" class="form-control" id="phone">
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
+
+
+        <script>
+            $(document).ready(function () {
+                // Manejador del botón para abrir el modal
+                // $('#openModalButton').on('click', function () {
+                //     $('#gymModal').modal('show');
+                // });
+
+                // Manejo de envío del formulario
+                $('#gymForm').submit(function (event) {
+                    event.preventDefault(); // Evita el envío por defecto del formulario
+
+                    $.ajax({
+                        url: '/gyms/save',
+                        type: 'POST',
+                        data: $(this).serialize(),
+                        success: function () {
+                            // Cierra el modal
+                            $('#gymModal').modal('hide');
+
+                            // Recarga el contenido de #output usando $.ajax para evitar problemas de caché
+                            $.ajax({
+                                url: '/gyms/list',
+                                type: 'GET',
+                                cache: false, // Desactiva el caché para asegurarte de obtener la versión más reciente
+                                success: function (data) {
+                                    // Reemplaza el contenido completo de #output con la respuesta obtenida
+                                    $('#output').html($(data).find('#output').html());
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error("Error al cargar el fragmento:", error);
+                                    alert("Hubo un problema al actualizar la lista de gimnasios.");
+                                }
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error al guardar:", error);
+                            alert("Hubo un problema al guardar el gimnasio.");
+                        }
+                    });
+                });
+            });
+
+
+        </script>
     </div>
+
 </body>
 
 </html>

@@ -9,9 +9,6 @@
 </head>
 
 <body>
-
-    <section layout:fragment="sidebar">
-
         <div class="wrapper">
             <aside id="sidebar">
                 <div class="d-flex">
@@ -91,9 +88,7 @@
 
 
             </div>
-
         </div>
-    </section>
     <script>
         function updateOutput(event) {
             event.preventDefault(); // Prevent default behavior of the link
@@ -104,8 +99,8 @@
         }
     </script>
     <script th:src="@{/webjars/jquery/3.7.1/jquery.min.js}"></script>
-    <script th:src="@{/webjars/popper.js/2.11.7/umd/popper.min.js}"></script>
     <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.min.js}"></script>
+    <!-- <script th:src="@{/webjars/popper.js/2.11.7/umd/popper.min.js}"></script> -->
     <script th:src="@{/js/script.js}"></script> <!-- Tu JS personalizado -->
 </body>
 
