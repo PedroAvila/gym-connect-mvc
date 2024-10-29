@@ -1,4 +1,4 @@
-package pe.com.gymconnect.gym_connect;
+package pe.com.gymconnect;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
