@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Test Ajax Fragment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <h3>A Permanent Heading</h3>
+    <a th:href="@{/gyms/test_ajax_frag}" onclick="updateOutput(event)">Test</a>
+    <div id="output">
+        Some initial text displayed here. This will be replaced.
+    </div>
+    <script>
+        function updateOutput(event) {
+            event.preventDefault(); // Prevent default behavior of the link
+            $.get($(event.target).attr("href")).done(function (fragment) {
+                console.log(fragment);
+                $("#output").html(fragment); // Replace the content of the output div
+            });
+        }
+    </script>
+</body>
+
+</html>

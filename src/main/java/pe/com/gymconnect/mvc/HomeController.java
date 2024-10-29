@@ -1,13 +1,17 @@
 package pe.com.gymconnect.mvc;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@Controller
-public class HomeControllerMvc {
+import lombok.extern.slf4j.Slf4j;
 
-    @GetMapping("/")
-    public String home() {
+@Controller
+@Slf4j
+public class HomeController {
+
+    @GetMapping({ "/", "index.html" })
+    public String home(Model index) {
         return "index";
     }
 

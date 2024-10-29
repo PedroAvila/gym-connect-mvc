@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script th:src="@{/webjars/jquery/3.7.1/jquery.min.js}"></script>
+    <!-- <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script> -->
+    <title>Maquetación de Página</title>
+    <style>
+        /* Estilos básicos para el layout */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Header y Footer */
+        header,
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Contenedor principal */
+        .main-content {
+            display: flex;
+            flex: 1;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 200px;
+            background-color: #f4f4f4;
+            padding: 1rem;
+        }
+
+        /* Contenedor dinámico de contenido */
+        .content-container {
+            flex: 1;
+            padding: 1rem;
+            background-color: #fff;
+        }
+
+        /* Estilos adicionales */
+        h1,
+        h2 {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>Encabezado Principal</h1>
+    </header>
+
+    <!-- Contenedor Principal -->
+    <div class="main-content">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2>Menú</h2>
+            <nav>
+                <ul>
+                    <li><a href="#" id="gym">Gym</a></li>
+                    <li><a href="contenido2">Opción 2</a></li>
+                    <li><a href="contenido3">Opción 3</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Contenedor dinámico donde se cargará el contenido -->
+        <section class="content-container" id="content-container">
+            <!-- Aquí se carga el contenido dinámico -->
+            <p>Selecciona una opción del menú para cargar contenido.</p>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Pie de página</p>
+    </footer>
+
+    <script>
+        $(document).ready(function () {
+            $('#gym').click(function () {
+                console.log('Hola mundo');
+                $("#content-container").load("../templates/index-gym.html");
+            });
+
+            $('#Django').click(function () {
+                $("#content-container").load("c_django.html");
+            });
+
+            $('#Jython').click(function () {
+                $("#content-container").load("c_jython.html");
+            });
+        });
+    </script>
+
+</body>
+
+</html>

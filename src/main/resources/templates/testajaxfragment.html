@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <div th:fragment="test_frag">
+        <div id="output" class="container">
+            Some replacement content.
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Codigo</th>
+                        <th>Nombre</th>
+                        <th>Dirección</th>
+                        <th>Telefono</th>
+                        <th>Fecha Creación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="tempGym : ${gyms}">
+                        <td th:text="${tempGym.id}" />
+                        <td th:text="${tempGym.code}" />
+                        <td th:text="${tempGym.name}" />
+                        <td th:text="${tempGym.address}" />
+                        <td th:text="${tempGym.phone}" />
+                        <td th:text="${tempGym.creationDate}" />
+                    </tr>
+                    <tr>
+                        <td scope="row"></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

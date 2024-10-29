@@ -140,3 +140,8 @@ a.sidebar-link:hover {
     transform: rotate(45deg);
     transition: all .2s ease-out;
 }
+
+/* CSS para el resto del proyecto */
+.hidden-column {
+    display: none;
+}

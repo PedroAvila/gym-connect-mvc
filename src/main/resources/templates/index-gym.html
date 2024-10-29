@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- <head>
+    <link href="/webjars/bootstrap/5.3.3/css/bootstrap.css" rel="stylesheet" />
+    <script type="text/javascript" src="/webjars/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/5.3.3/js/bootstrap.min.js"></script>
+</head> -->
+
+<body>
+    <div th:fragment="test_frag">
+        <div id="output" class="container">
+            <div>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#gymModal">Agregar</button>
+            </div>
+            <br>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="hidden-column">Id</th>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Dirección</th>
+                        <th>Teléfono</th>
+                        <th>Fecha Creación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="tempGym : ${gyms}">
+                        <td class="hidden-column" th:text="${tempGym.id}" />
+                        <td th:text="${tempGym.code}" />
+                        <td th:text="${tempGym.name}" />
+                        <td th:text="${tempGym.address}" />
+                        <td th:text="${tempGym.phone}" />
+                        <td th:text="${tempGym.creationDate}" />
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <!-- Modal -->
+            <div class="modal fade" id="gymModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <form id="gymForm" th:action="@{/gyms/save}" th:object="${gym}" method="post">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Gym</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+
+                                <!-- <div class="mb-3">
+                                            <label for="code" class="form-label">Codigo</label>
+                                            <input type="text" class="form-control" id="code">
+                                        </div> -->
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Nombre</label>
+                                    <input type="text" th:field="*{name}" class="form-control" id="name">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Dirección</label>
+                                    <input type="text" th:field="*{address}" class="form-control" id="address">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Teléfono</label>
+                                    <input type="text" th:field="*{phone}" class="form-control" id="phone">
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                $('#gymForm').submit(function (event) {
+                    event.preventDefault(); // Evita el envío por defecto del formulario
+
+                    $.ajax({
+                        url: '/gyms/save',
+                        type: 'POST',
+                        data: $(this).serialize(),
+                        success: function () {
+                            // Cierra el modal
+                            $('#gymModal').modal('hide');
+
+                            // Recarga solo el fragmento test_frag dentro de #output
+                            $.ajax({
+                                url: '/gyms/list',
+                                type: 'GET',
+                                success: function (data) {
+                                    $('#output').html(data);
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error("Error al cargar el fragmento:", error);
+                                    alert("Hubo un problema al actualizar la lista de gimnasios.");
+                                }
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error al guardar:", error);
+                            alert("Hubo un problema al guardar el gimnasio.");
+                        }
+                    });
+                });
+            });
+        </script>
+    </div>
+
+</body>
+
+</html>
