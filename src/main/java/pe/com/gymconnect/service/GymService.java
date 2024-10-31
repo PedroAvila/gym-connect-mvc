@@ -1,5 +1,6 @@
 package pe.com.gymconnect.service;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.data.domain.Page;
@@ -15,7 +16,9 @@ import pe.com.gymconnect.dto.UpdateGymCommandWithId;
 
 public interface GymService {
 
-    CompletableFuture<Page<GymDto>> findAllAsync(Pageable pageable);
+    CompletableFuture<List<GymDto>> findAllAsync();
+
+    CompletableFuture<Page<GymDto>> findAllPaginatedAsync(Pageable pageable);
 
     CompletableFuture<GetGymByIdResult> singleAsync(GetGymByIdQuery query);
 
