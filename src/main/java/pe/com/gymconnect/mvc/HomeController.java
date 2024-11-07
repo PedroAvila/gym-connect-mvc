@@ -10,15 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class HomeController {
 
-    @GetMapping({ "/", "indexDatatable.html" })
+    @GetMapping({ "/", "index.html" })
     public String home(Model index) {
 
-        // return "index";
-        return "/fragments/indexDatatable";
+        return "index";
     }
-
-    // @GetMapping("/goal")
-    // public String goals(Model index) {
-    // return "/fragments/indexDatatable :: test_frag";
-    // }
 }

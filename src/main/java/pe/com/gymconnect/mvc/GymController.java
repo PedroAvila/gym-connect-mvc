@@ -1,5 +1,7 @@
 package pe.com.gymconnect.mvc;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.data.domain.Pageable;
@@ -16,6 +18,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import pe.com.gymconnect.dto.CreateGymCommand;
+import pe.com.gymconnect.dto.GymDto;
 import pe.com.gymconnect.service.GymService;
 
 @Controller
@@ -28,43 +31,34 @@ public class GymController {
         this.gymService = gymService;
     }
 
-    @GetMapping("/list")
-    public CompletableFuture<JsonNode> listGyms(Model model) {
+    @GetMapping("/listGyms")
+    public CompletableFuture<String> listGyms(Model model) {
 
         return gymService.findAllAsync()
-                .thenApplyAsync(gyms -> {
-                    ObjectMapper mapper = new ObjectMapper();
-                    return mapper.valueToTree(gyms);
+                .thenApplyAsync(gymPage -> {
+                    model.addAttribute("gyms", gymPage);
+                    model.addAttribute("gym", new CreateGymCommand(null, null, null));
+                    return "index-gym";
                 });
     }
 
-    @GetMapping("/addContent")
-    public String addContent() {
-        return "index-gym :: test_frag";
-    }
+    @GetMapping("/listData")
+    public CompletableFuture<ResponseEntity<Map<String, Object>>> listGyms() {
+        return gymService.findAllAsync()
+                .thenApplyAsync(gyms -> {
+                    Map<String, Object> response = new HashMap<>();
 
-    // @GetMapping("/list")
-    // public CompletableFuture<ResponseEntity<Map<String, Object>>>
-    // listGyms(Pageable pageable) {
-    // return gymService.findAllAsync(pageable)
-    // .thenApplyAsync(gymPage -> {
-    // Map<String, Object> response = new HashMap<>();
-    // response.put("data", gymPage.getContent());
-    // response.put("recordsTotal", gymPage.getTotalElements());
-    // response.put("recordsFiltered", gymPage.getTotalElements());
-    // response.put("fragment", "index-gym :: test_frag"); // Fragmento a renderizar
-    //
-    // // Devuelve un ResponseEntity con el cuerpo
-    // return ResponseEntity.ok(response);
-    // })
-    // .exceptionally(ex -> {
-    // Map<String, Object> errorResponse = new HashMap<>();
-    // errorResponse.put("message", "Error al obtener la lista de gimnasios");
-    // errorResponse.put("error", ex.getMessage());
-    // return
-    // ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-    // });
-    // }
+                    // Agregamos el objeto gym inicial (puedes ajustar los valores si es necesario)
+                    response.put("gym", new GymDto(null, 0, null, null, null, null));
+
+                    // Convertimos la lista de gimnasios a JSON
+                    ObjectMapper mapper = new ObjectMapper();
+                    JsonNode gymsJson = mapper.valueToTree(gyms);
+                    response.put("data", gymsJson);
+
+                    return ResponseEntity.ok(response);
+                });
+    }
 
     @PostMapping("/save")
     public CompletableFuture<ResponseEntity<String>> save(@ModelAttribute("gym") CreateGymCommand theGym, Model model,

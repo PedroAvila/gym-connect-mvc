@@ -1,21 +1,22 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <!-- Datatables CSS -->
-    <link rel="stylesheet" type="text/css" th:href="@{/css/datatable/dataTables.bootstrap5.min.css}">
-</head>
+<!-- <head>
+    <link href="/webjars/bootstrap/5.3.3/css/bootstrap.css" rel="stylesheet" />
+    <script type="text/javascript" src="/webjars/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/5.3.3/js/bootstrap.min.js"></script>
+</head> -->
 
 <body>
-    <div class="container">
-        <div>
+    <div th:fragment="test_frag">
+        <div id="output" class="container">
             <div>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                     data-bs-target="#gymModal">Agregar</button>
             </div>
             <br>
 
-            <table id="exampleGym" class="table table-striped">
+            <table class="table table-striped">
                 <thead>
                     <tr>
                         <th class="hidden-column">Id</th>
@@ -27,7 +28,14 @@
                     </tr>
                 </thead>
                 <tbody>
-
+                    <tr th:each="tempGym : ${gyms}">
+                        <td class="hidden-column" th:text="${tempGym.id}" />
+                        <td th:text="${tempGym.code}" />
+                        <td th:text="${tempGym.name}" />
+                        <td th:text="${tempGym.address}" />
+                        <td th:text="${tempGym.phone}" />
+                        <td th:text="${tempGym.creationDate}" />
+                    </tr>
 
                 </tbody>
             </table>
@@ -72,7 +80,40 @@
             </div>
         </div>
 
-        <script type="text/javascript" th:src="@{/js/scriptDatatableGym.js}"></script>
+        <script>
+            $(document).ready(function () {
+                $('#gymForm').submit(function (event) {
+                    event.preventDefault(); // Evita el envío por defecto del formulario
+
+                    $.ajax({
+                        url: '/gyms/save',
+                        type: 'POST',
+                        data: $(this).serialize(),
+                        success: function () {
+                            // Cierra el modal
+                            $('#gymModal').modal('hide');
+
+                            // Recarga solo el fragmento test_frag dentro de #output
+                            $.ajax({
+                                url: '/gyms/list',
+                                type: 'GET',
+                                success: function (data) {
+                                    $('#output').html(data);
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error("Error al cargar el fragmento:", error);
+                                    alert("Hubo un problema al actualizar la lista de gimnasios.");
+                                }
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error al guardar:", error);
+                            alert("Hubo un problema al guardar el gimnasio.");
+                        }
+                    });
+                });
+            });
+        </script>
     </div>
 
 </body>
