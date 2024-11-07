@@ -1,6 +1,7 @@
 package pe.com.gymconnect.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.data.domain.Page;
@@ -30,9 +31,19 @@ public class GymServiceImpl implements GymService {
         this.gymRepository = gymRepository;
     }
 
-    @Async("asyncExecutor")
     @Override
-    public CompletableFuture<Page<GymDto>> findAllAsync(Pageable pageable) {
+    public CompletableFuture<List<GymDto>> findAllAsync() {
+        return CompletableFuture.supplyAsync(() -> {
+            var gyms = gymRepository.findAll();
+            List<GymDto> gymDtos = gyms.stream().map(gym -> new GymDto(gym.getId(), gym.getCode(), gym.getName(),
+                    gym.getAddress(), gym.getPhone(), gym.getCreationDate())).toList();
+            return gymDtos;
+        });
+    }
+
+    @Async("virtualThreadExecutor")
+    @Override
+    public CompletableFuture<Page<GymDto>> findAllPaginatedAsync(Pageable pageable) {
         return CompletableFuture.supplyAsync(() -> {
             var gyms = gymRepository.findAll(pageable);
             Page<GymDto> gymDtos = gyms.map(gym -> new GymDto(gym.getId(), gym.getCode(), gym.getName(),
@@ -41,7 +52,7 @@ public class GymServiceImpl implements GymService {
         });
     }
 
-    @Async("asyncExecutor")
+    @Async("virtualThreadExecutor")
     @Override
     public CompletableFuture<GetGymByIdResult> singleAsync(GetGymByIdQuery query) {
         return CompletableFuture.supplyAsync(() -> {
@@ -53,22 +64,22 @@ public class GymServiceImpl implements GymService {
         });
     }
 
-    @Async("asyncExecutor")
+    @Async("virtualThreadExecutor")
     @Transactional
     @Override
     public CompletableFuture<CreateGymResult> createAsync(CreateGymCommand command) {
 
         return CompletableFuture.supplyAsync(() -> {
             var gym = new Gym();
+            boolean existName = gymRepository.existsByName(gym.getName());
+            if (existName)
+                throw new BusinessException("El nombre del gym ya existe", HttpStatus.CONFLICT);
+
             gym.setCode(gymRepository.generarCodigo());
             gym.setName(command.name());
             gym.setAddress(command.address());
             gym.setPhone(command.phone());
             gym.setCreationDate(new Date());
-
-            boolean existName = gymRepository.existsByName(gym.getName());
-            if (existName)
-                throw new BusinessException("El nombre del gym ya existe", HttpStatus.CONFLICT);
 
             gymRepository.save(gym);
 
@@ -77,7 +88,7 @@ public class GymServiceImpl implements GymService {
         });
     }
 
-    @Async("asyncExecutor")
+    @Async("virtualThreadExecutor")
     @Transactional
     @Override
     public CompletableFuture<Void> updateAsync(UpdateGymCommandWithId commandWithId) {
@@ -96,7 +107,7 @@ public class GymServiceImpl implements GymService {
         });
     }
 
-    @Async("asyncExecutor")
+    @Async("virtualThreadExecutor")
     @Override
     public CompletableFuture<Void> deleteAsync(DeleteGymCommand command) {
         return CompletableFuture.runAsync(() -> {
@@ -105,4 +116,5 @@ public class GymServiceImpl implements GymService {
             gymRepository.deleteById(gym.getId());
         });
     }
+
 }

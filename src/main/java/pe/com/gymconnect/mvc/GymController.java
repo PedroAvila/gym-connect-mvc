@@ -1,5 +1,7 @@
 package pe.com.gymconnect.mvc;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.data.domain.Pageable;
@@ -12,7 +14,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import pe.com.gymconnect.dto.CreateGymCommand;
+import pe.com.gymconnect.dto.GymDto;
 import pe.com.gymconnect.service.GymService;
 
 @Controller
@@ -25,24 +31,43 @@ public class GymController {
         this.gymService = gymService;
     }
 
-    @GetMapping("/list")
-    public CompletableFuture<String> hello(Model model, Pageable pageable) {
+    @GetMapping("/listGyms")
+    public CompletableFuture<String> listGyms(Model model) {
 
-        return gymService.findAllAsync(pageable)
+        return gymService.findAllAsync()
                 .thenApplyAsync(gymPage -> {
-                    model.addAttribute("gyms", gymPage.getContent());
+                    model.addAttribute("gyms", gymPage);
                     model.addAttribute("gym", new CreateGymCommand(null, null, null));
-                    return "index-gym :: test_frag";
+                    return "index-gym";
+                });
+    }
+
+    @GetMapping("/listData")
+    public CompletableFuture<ResponseEntity<Map<String, Object>>> listGyms() {
+        return gymService.findAllAsync()
+                .thenApplyAsync(gyms -> {
+                    Map<String, Object> response = new HashMap<>();
+
+                    // Agregamos el objeto gym inicial (puedes ajustar los valores si es necesario)
+                    response.put("gym", new GymDto(null, 0, null, null, null, null));
+
+                    // Convertimos la lista de gimnasios a JSON
+                    ObjectMapper mapper = new ObjectMapper();
+                    JsonNode gymsJson = mapper.valueToTree(gyms);
+                    response.put("data", gymsJson);
+
+                    return ResponseEntity.ok(response);
                 });
     }
 
     @PostMapping("/save")
-    public CompletableFuture<ResponseEntity<String>> save(@ModelAttribute("gym") CreateGymCommand theGym, Model model, Pageable pageable) {
+    public CompletableFuture<ResponseEntity<String>> save(@ModelAttribute("gym") CreateGymCommand theGym, Model model,
+            Pageable pageable) {
 
         return gymService.createAsync(theGym)
-                .thenCompose(savedGym -> gymService.findAllAsync(pageable))
+                .thenCompose(savedGym -> gymService.findAllAsync())
                 .thenApply(gymPage -> {
-                    model.addAttribute("gyms", gymPage.getContent());
+                    model.addAttribute("gyms", gymPage);
                     return ResponseEntity.ok().body("index-gym :: test_frag");
                 })
                 .exceptionally(ex -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar"));

@@ -31,7 +31,7 @@ public class GoalServiceImpl implements GoalService {
         this.gymRepository = gymRepository;
     }
 
-    @Async("asyncExecutor")
+    @Async("virtualThreadExecutor")
     @Override
     public CompletableFuture<Page<GoalDto>> findAllAsync(Pageable pageable) {
         return CompletableFuture.supplyAsync(() -> {
@@ -44,7 +44,7 @@ public class GoalServiceImpl implements GoalService {
         });
     }
 
-    @Async("asyncExecutor")
+    @Async("virtualThreadExecutor")
     @Override
     public CompletableFuture<GetGoalByIdResult> singleAsync(GetGoalByIdQuery query) {
         return CompletableFuture.supplyAsync(() -> {
@@ -55,7 +55,7 @@ public class GoalServiceImpl implements GoalService {
         });
     }
 
-    @Async("asyncExecutor")
+    @Async("virtualThreadExecutor")
     @Transactional
     @Override
     public CompletableFuture<CreateGoalResult> createAsync(CreateGoalCommand command) {
@@ -82,7 +82,7 @@ public class GoalServiceImpl implements GoalService {
         });
     }
 
-    @Async("asyncExecutor")
+    @Async("virtualThreadExecutor")
     @Transactional
     @Override
     public CompletableFuture<Void> updateAsync(UpdateGoalCommandWithId commandWithId) {

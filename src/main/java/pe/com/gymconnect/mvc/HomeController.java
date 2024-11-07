@@ -12,7 +12,7 @@ public class HomeController {
 
     @GetMapping({ "/", "index.html" })
     public String home(Model index) {
+
         return "index";
     }
-
 }
