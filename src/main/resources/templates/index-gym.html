@@ -3,12 +3,32 @@
 
 <head>
     <!-- Datatables CSS -->
+    <link rel="stylesheet" th:href="@{/css/eskeleton.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/datatable/dataTables.bootstrap5.min.css}">
 </head>
 
 <body>
     <div class="container">
-        <div>
+
+        <!-- Duplicado-Inicio -->
+        <div class="preloadTrue">
+            <div>
+                <div type="button" class="btn bg-preload my-3 px-5 py-3" data-bs-toggle="modal"
+                    data-bs-target="#gymModal">
+                    <div class="into-preload"></div>
+                </div>
+            </div>
+            <br>
+
+            <div class="table bg-preload p-5" style="height: 600px">
+                <div class="into-preload"></div>
+            </div>
+
+
+        </div>
+        <!-- Duplicado-Fin -->
+
+        <div class="preloadFalse">
             <div>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                     data-bs-target="#gymModal">Agregar</button>
@@ -71,7 +91,7 @@
                 </form>
             </div>
         </div>
-
+        <!-- <script type="text/javascript" th:src="@{/js/eskeleton.js}"></script> -->
         <script type="text/javascript" th:src="@{/js/scriptDatatableGym.js}"></script>
     </div>
 

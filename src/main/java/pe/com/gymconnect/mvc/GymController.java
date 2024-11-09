@@ -32,14 +32,19 @@ public class GymController {
     }
 
     @GetMapping("/listGyms")
-    public CompletableFuture<String> listGyms(Model model) {
+    public String listGyms(Model model) {
 
-        return gymService.findAllAsync()
-                .thenApplyAsync(gymPage -> {
+        // model.addAttribute("loading", true);
+        model.addAttribute("gym", new CreateGymCommand(null, null, null));
+        // // Durante este tiempo necesito mostrar un mensaje
+        gymService.findAllAsync()
+                .thenAccept(gymPage -> {
                     model.addAttribute("gyms", gymPage);
                     model.addAttribute("gym", new CreateGymCommand(null, null, null));
-                    return "index-gym";
+                    // model.addAttribute("loading", true);
                 });
+
+        return "index-gym";
     }
 
     @GetMapping("/listData")
