@@ -31,6 +31,7 @@ public class GymServiceImpl implements GymService {
         this.gymRepository = gymRepository;
     }
 
+    @Async("virtualThreadExecutor")
     @Override
     public CompletableFuture<List<GymDto>> findAllAsync() {
         return CompletableFuture.supplyAsync(() -> {
