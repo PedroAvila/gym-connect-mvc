@@ -3,7 +3,7 @@ $(document).ready(function () {
     preload();
 
     $('#exampleGym').DataTable({
-        debugger: true,
+        // debugger: true,
         ajax: {
             url: "/gyms/listData",
             dataSrc: "data", // Especificamos "data" para que DataTables use la clave "data" del JSON 
