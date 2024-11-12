@@ -72,7 +72,7 @@ public class GymServiceImpl implements GymService {
 
         return CompletableFuture.supplyAsync(() -> {
             var gym = new Gym();
-            boolean existName = gymRepository.existsByName(gym.getName());
+            boolean existName = gymRepository.existsByName(command.name());
             if (existName)
                 throw new BusinessException("El nombre del gym ya existe", HttpStatus.CONFLICT);
 

@@ -4,14 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -65,17 +64,29 @@ public class GymController {
                 });
     }
 
-    @PostMapping("/save")
-    public CompletableFuture<ResponseEntity<String>> save(@ModelAttribute("gym") CreateGymCommand theGym, Model model,
-            Pageable pageable) {
+    // @PostMapping("/save")
+    // public CompletableFuture<ResponseEntity<String>> save(@ModelAttribute("gym")
+    // CreateGymCommand theGym, Model model,
+    // Pageable pageable) {
 
-        return gymService.createAsync(theGym)
-                .thenCompose(savedGym -> gymService.findAllAsync())
-                .thenApply(gymPage -> {
-                    model.addAttribute("gyms", gymPage);
-                    return ResponseEntity.ok().body("index-gym :: test_frag");
+    // return gymService.createAsync(theGym)
+    // .thenCompose(savedGym -> gymService.findAllAsync())
+    // .thenApply(gymPage -> {
+    // model.addAttribute("gyms", gymPage);
+    // return ResponseEntity.ok().body("index-gym :: test_frag");
+    // })
+    // .exceptionally(ex ->
+    // ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al
+    // guardar"));
+    // }
+
+    @PostMapping("/save")
+    public CompletableFuture<ResponseEntity<String>> save(@RequestBody CreateGymCommand data) {
+
+        return gymService.createAsync(data)
+                .thenApply(savedGym -> {
+                    return ResponseEntity.ok().body("");
                 })
                 .exceptionally(ex -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar"));
     }
-
 }

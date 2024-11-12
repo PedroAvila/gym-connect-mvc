@@ -1,8 +1,10 @@
+import { dataTableOptions } from "../js/dataTableConfig.js";
+
 $(document).ready(function () {
     console.log('Pedro estamos en el js datatable');
     preload();
 
-    $('#exampleGym').DataTable({
+    const table = $('#exampleGym').DataTable({
         // debugger: true,
         ajax: {
             url: "/gyms/listData",
@@ -16,7 +18,50 @@ $(document).ready(function () {
             { data: "phone" },
             { data: "creationDate" }
         ],
+        "language": dataTableOptions
     });
+
+    $('#addGymButton').click(function () {
+        // Limpiar los campos del formulario
+        $('#name').val('');
+        $('#address').val('');
+        $('#phone').val('');
+
+        // Mostrar el modal
+        $('#gymModal').modal('show');
+    });
+
+    $('#gymModal').submit(function (event) {
+        event.preventDefault();
+        guardar();
+    });
+
+
+    const guardar = () => {
+        // debugger
+        var gym = {
+            name: $('#name').val(),
+            address: $('#address').val(),
+            phone: $('#phone').val()
+        };
+        console.log(gym);
+        $.ajax({
+            url: '/gyms/save',
+            type: 'POST',
+            data: JSON.stringify(gym),
+            datatype: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                table.ajax.reload();
+                // Cierra el modal
+                $('#gymModal').modal('hide');
+            },
+            error: function (xhr, status, error) {
+                console.error("Error al guardar:", error);
+                alert("Hubo un problema al guardar el gimnasio.");
+            }
+        });
+    }
 });
 
 
@@ -39,6 +84,7 @@ $(document).ready(function () {
 //         })
 //     }
 // }
+
 
 function preload() {
     var preloadFalse = $(".preloadFalse"); // Elementos que se mostrarán después de la carga
